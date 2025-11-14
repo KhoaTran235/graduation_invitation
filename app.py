@@ -76,6 +76,13 @@ def emoji8(): #star emoji
         falling_speed=falling_speed,
         animation_length=animation_length,
     )
+def emoji9(): #cigarette emoji
+    rain(
+        emoji="🚬",
+        font_size=emoji_size,
+        falling_speed=falling_speed,
+        animation_length=animation_length,
+    )
 
 guest_list = {
     "anh Huy": "anh Ninh Xuân Quang Huy",
@@ -86,6 +93,14 @@ guest_list = {
     "chị Tâm": "chị Phan Ngọc Bảo Tâm",
     "chị Ngọc": "chị Trần Hồng Bảo Ngọc",
     "chị Linh": "chị Lê Thùy Linh"
+}
+
+# Vinh's separate route data
+vinh_data = {
+    "key": "anh Vinh",
+    "full_name": "anh Vinh",
+    "sound_file": "sound/glimpse_of_us.mp3",
+    "action": emoji9
 }
 
 st.set_page_config(
@@ -135,42 +150,64 @@ h2, h3 { color: #333; }
 
 
 
-st.markdown("<h3>Xin mời bạn chọn tên của mình để mở thiệp mời</h3>", unsafe_allow_html=True)
+# Check for Vinh route via query parameter
+query_params = st.query_params
+is_vinh_route = query_params.get("guest") == "Vinh" or query_params.get("Vinh") is not None
 
-selected_guest = st.selectbox("Bạn là", ["-- Chọn tên --"] + list(guest_list.keys()))
-b64 = ""
-
-if selected_guest != "-- Chọn tên --":
-    sound_file = {
-        "anh Huy": "sound/max.mp3",
-        "anh Sơn": "sound/akatsuki.mp3",
-        "anh Hiếu": "sound/lamine.mp3",
-        "anh Trung": "sound/hala.mp3",
-        "chị Vân Anh": "sound/ht2.mp3",
-        "chị Tâm": "sound/tam.mp3",
-        "chị Ngọc": "sound/ngoc.mp3",
-        "chị Linh": "sound/linh.mp3"
-    }[selected_guest]
-    action = {
-        "anh Huy": emoji1,
-        "anh Sơn": emoji2,
-        "anh Hiếu": emoji3,
-        "anh Trung": emoji4,
-        "chị Vân Anh": emoji5,
-        "chị Tâm": emoji6,
-        "chị Ngọc": emoji7,
-        "chị Linh": emoji8
-    }[selected_guest]
-
+if is_vinh_route:
+    # Vinh's special route
+    selected_guest = vinh_data["key"]
+    sound_file = vinh_data["sound_file"]
+    action = vinh_data["action"]
+    guest_name = vinh_data["full_name"]
+    
     with open(sound_file, "rb") as f:
         data = f.read()
     b64 = base64.b64encode(data).decode()
-
+    
+    # Show button for Vinh to open invitation
     start = st.button("📬 Mở thiệp")
+else:
+    # Regular route with dropdown
+    st.markdown("<h3>Xin mời bạn chọn tên của mình để mở thiệp mời</h3>", unsafe_allow_html=True)
+    
+    selected_guest = st.selectbox("Bạn là", ["-- Chọn tên --"] + list(guest_list.keys()))
+    b64 = ""
+    
+    if selected_guest != "-- Chọn tên --":
+        sound_file = {
+            "anh Huy": "sound/max.mp3",
+            "anh Sơn": "sound/akatsuki.mp3",
+            "anh Hiếu": "sound/lamine.mp3",
+            "anh Trung": "sound/hala.mp3",
+            "chị Vân Anh": "sound/ht2.mp3",
+            "chị Tâm": "sound/tam.mp3",
+            "chị Ngọc": "sound/ngoc.mp3",
+            "chị Linh": "sound/linh.mp3"
+        }[selected_guest]
+        action = {
+            "anh Huy": emoji1,
+            "anh Sơn": emoji2,
+            "anh Hiếu": emoji3,
+            "anh Trung": emoji4,
+            "chị Vân Anh": emoji5,
+            "chị Tâm": emoji6,
+            "chị Ngọc": emoji7,
+            "chị Linh": emoji8
+        }[selected_guest]
+        guest_name = guest_list[selected_guest]
 
-    if start:
-        # Audio tự động phát khi mở thiệp
-        music_html = f"""
+        with open(sound_file, "rb") as f:
+            data = f.read()
+        b64 = base64.b64encode(data).decode()
+
+        start = st.button("📬 Mở thiệp")
+    else:
+        start = False
+
+if start:
+    # Audio tự động phát khi mở thiệp
+    music_html = f"""
         <audio id="bgmusic" loop autoplay>
             <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
         </audio>
@@ -193,21 +230,22 @@ if selected_guest != "-- Chọn tên --":
             }})();
         </script>
         """
-        components.html(music_html, height=0)
+    components.html(music_html, height=0)
 
-        # Hiệu ứng
-        st.balloons()
-        st.snow()
-        action()
+    # Hiệu ứng
+    st.balloons()
+    st.snow()
+    action()
 
-        # Nội dung trong khung thiệp
-        # Open the decorated invitation border so subsequent Streamlit outputs render inside it
-        # Nội dung trong khung thiệp
-        with st.container(border=True):
+    # Nội dung trong khung thiệp
+    # Open the decorated invitation border so subsequent Streamlit outputs render inside it
+    # Nội dung trong khung thiệp
+    with st.container(border=True):
             st.markdown("<h1>🎓 Thư Mời Dự Lễ Tốt Nghiệp 🎓</h1>", unsafe_allow_html=True)
 
             # Phần kính gửi
-            st.markdown(f"<h2 class='glow'>Kính gửi: {guest_list[selected_guest]}</h2>", unsafe_allow_html=True)
+            display_name = guest_name if is_vinh_route else guest_list[selected_guest]
+            st.markdown(f"<h2 class='glow'>Kính gửi: {display_name}</h2>", unsafe_allow_html=True)
 
             # Phần giới thiệu nhân dịp tốt nghiệp
             st.write("Nhân dịp lễ tốt nghiệp của tân cử nhân", unsafe_allow_html=True)
@@ -223,13 +261,15 @@ if selected_guest != "-- Chọn tên --":
             """, unsafe_allow_html=True)
 
             # Phần nội dung chi tiết
+            display_name = guest_name if is_vinh_route else guest_list[selected_guest]
+            guest_key = selected_guest
             st.write(f"""
-            Trân trọng kính mời **{guest_list[selected_guest]}** đến tham dự  **Lễ tốt nghiệp** - một cột mốc đánh dấu hành trình học tập và trưởng thành của tôi. 🎓  
+            Trân trọng kính mời **{display_name}** đến tham dự  **Lễ tốt nghiệp** - một cột mốc đánh dấu hành trình học tập và trưởng thành của tôi. 🎓  
 
             **⏰ Thời gian:** vào lúc 14:00 hoặc 17:30 ngày 29 tháng 11 năm 2025 (thứ Bảy)  
             **🏛️ Địa điểm:** Trường Đại học Bách Khoa ĐHQG TP.HCM - cơ sở 1 tại 268 Lý Thường Kiệt, phường Diên Hồng, TP.HCM
 
-            Sự hiện diện của {selected_guest} sẽ là niềm vinh dự và niềm vui to lớn cho cá nhân tôi.  
+            Sự hiện diện của {guest_key} sẽ là niềm vinh dự và niềm vui to lớn cho cá nhân tôi.  
             Xin chân thành cảm ơn và mong được đón tiếp! 🌷
             """, unsafe_allow_html=True)
             st.markdown("---")
