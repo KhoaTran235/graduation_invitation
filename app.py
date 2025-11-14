@@ -3,14 +3,14 @@ import base64
 import streamlit.components.v1 as components
 from streamlit_extras.let_it_rain import rain
 
-st.markdown("""
-<style>
-html, body, [data-testid="stAppViewContainer"] {
-    background-color: #0E1117;
-    color: #ffffff;
-}
-</style>
-""", unsafe_allow_html=True)
+# st.markdown("""
+# <style>
+# html, body, [data-testid="stAppViewContainer"] {
+#     background-color: #0E1117;
+#     color: #ffffff;
+# }
+# </style>
+# """, unsafe_allow_html=True)
 
 emoji_size = 50
 falling_speed = 7
