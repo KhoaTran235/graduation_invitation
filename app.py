@@ -169,23 +169,31 @@ if selected_guest != "-- Chọn tên --":
     start = st.button("📬 Mở thiệp")
 
     if start:
-        # Audio ẩn, tap anywhere để phát
+        # Audio tự động phát khi mở thiệp
         music_html = f"""
-        <audio id="bgmusic" loop>
+        <audio id="bgmusic" loop autoplay>
             <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
         </audio>
         <script>
-            document.body.addEventListener('click', function playMusic() {{
+            (function() {{
                 var audio = document.getElementById('bgmusic');
-                if(audio.paused){{
-                    audio.play();
+                // Thử phát ngay khi load
+                var playPromise = audio.play();
+                if (playPromise !== undefined) {{
+                    playPromise.then(function() {{
+                        // Phát thành công
+                    }}).catch(function(error) {{
+                        // Nếu browser chặn autoplay, thử phát khi user click
+                        document.body.addEventListener('click', function playMusic() {{
+                            audio.play().catch(function(e) {{}});
+                            document.body.removeEventListener('click', playMusic);
+                        }}, {{once: true}});
+                    }});
                 }}
-                document.body.removeEventListener('click', playMusic);
-            }});
+            }})();
         </script>
-        <p style="text-align:center; color:#555; font-size:0.9em;">🎵 Tap here! 🎵</p>
         """
-        components.html(music_html, height=50)
+        components.html(music_html, height=0)
 
         # Hiệu ứng
         st.balloons()
