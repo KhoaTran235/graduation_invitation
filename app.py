@@ -37,9 +37,9 @@ def emoji3(): #weights emoji
         falling_speed=falling_speed,
         animation_length=animation_length,
     )
-def emoji4(): #soccer emoji + lawyer emoji
+def emoji4(): #crown soccer emoji + lawyer emoji
     rain(
-        emoji="⚽👩‍⚖️",
+        emoji="👑⚽👩‍⚖️",
         font_size=emoji_size,
         falling_speed=falling_speed,
         animation_length=animation_length,
@@ -145,7 +145,7 @@ if selected_guest != "-- Chọn tên --":
         "anh Huy": "sound/max.mp3",
         "anh Sơn": "sound/akatsuki.mp3",
         "anh Hiếu": "sound/lamine.mp3",
-        "anh Trung": "sound/c1.mp3",
+        "anh Trung": "sound/hala.mp3",
         "chị Vân Anh": "sound/ht2.mp3",
         "chị Tâm": "sound/tam.mp3",
         "chị Ngọc": "sound/ngoc.mp3",
