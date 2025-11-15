@@ -98,7 +98,7 @@ guest_list = {
 # Vinh's separate route data
 vinh_data = {
     "key": "anh Vinh",
-    "full_name": "anh Vinh",
+    "full_name": "anh Nguyễn Thế Vinh",
     "sound_file": "sound/glimpse_of_us.mp3",
     "action": emoji9
 }
@@ -181,7 +181,7 @@ else:
             "anh Hiếu": "sound/lamine.mp3",
             "anh Trung": "sound/hala.mp3",
             "chị Vân Anh": "sound/ht2.mp3",
-            "chị Tâm": "sound/tam.mp3",
+            "chị Tâm": "sound/lowg.mp3",
             "chị Ngọc": "sound/ngoc.mp3",
             "chị Linh": "sound/linh.mp3"
         }[selected_guest]
@@ -207,30 +207,30 @@ else:
 
 if start:
     # Audio tự động phát khi mở thiệp
-    music_html = f"""
-        <audio id="bgmusic" loop autoplay>
-            <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
-        </audio>
-        <script>
-            (function() {{
-                var audio = document.getElementById('bgmusic');
-                // Thử phát ngay khi load
-                var playPromise = audio.play();
-                if (playPromise !== undefined) {{
-                    playPromise.then(function() {{
-                        // Phát thành công
-                    }}).catch(function(error) {{
-                        // Nếu browser chặn autoplay, thử phát khi user click
-                        document.body.addEventListener('click', function playMusic() {{
-                            audio.play().catch(function(e) {{}});
-                            document.body.removeEventListener('click', playMusic);
-                        }}, {{once: true}});
-                    }});
-                }}
-            }})();
+    music_html = f""" 
+        <audio id="bgmusic" loop> <source src="data:audio/mp3;base64,{b64}" type="audio/mp3"> </audio>
+        <script> document.body.addEventListener('click', function playMusic() {{ 
+            var audio = document.getElementById('bgmusic'); 
+            if(audio.paused){{ audio.play(); }} 
+            document.body.removeEventListener('click', playMusic); 
+            }}); 
         </script>
+
+        <p onclick="document.getElementById('bgmusic').play()"
+        style="
+            text-align:center;
+            font-size:2em;
+            font-weight:700;
+            color:#ff1493;
+            cursor:pointer;
+            animation: glow 1.8s infinite ease-in-out;
+            text-shadow: 0 0 1px #ff69b4, 0 0 10px #ff69b4;
+        ">
+        🎵 Tap here! 🎵
+        </p>
         """
-    components.html(music_html, height=0)
+    components.html(music_html, height=120)
+
 
     # Hiệu ứng
     st.balloons()
@@ -266,7 +266,7 @@ if start:
             st.write(f"""
             Trân trọng kính mời **{display_name}** đến tham dự  **Lễ tốt nghiệp** - một cột mốc đánh dấu hành trình học tập và trưởng thành của tôi. 🎓  
 
-            **⏰ Thời gian:** vào lúc 14:00 hoặc 17:30 ngày 29 tháng 11 năm 2025 (thứ Bảy)  
+            **⏰ Thời gian:** vào lúc 14:00 hoặc 17:30 thứ Bảy, ngày 29 tháng 11 năm 2025  
             **🏛️ Địa điểm:** Trường Đại học Bách Khoa ĐHQG TP.HCM - cơ sở 1 tại 268 Lý Thường Kiệt, phường Diên Hồng, TP.HCM
 
             Sự hiện diện của {guest_key} sẽ là niềm vinh dự và niềm vui to lớn cho cá nhân tôi.  
