@@ -69,9 +69,9 @@ def emoji7(): #anime emoji
         animation_length=animation_length,
     )
 
-def emoji8(): #star emoji
+def emoji8(): # rabbit + flower emoji
     rain(
-        emoji="🐍🌹",
+        emoji="🐇🌹",
         font_size=emoji_size,
         falling_speed=falling_speed,
         animation_length=animation_length,
@@ -209,11 +209,20 @@ if start:
     # Audio tự động phát khi mở thiệp
     music_html = f""" 
         <audio id="bgmusic" loop> <source src="data:audio/mp3;base64,{b64}" type="audio/mp3"> </audio>
-        <script> document.body.addEventListener('click', function playMusic() {{ 
-            var audio = document.getElementById('bgmusic'); 
-            if(audio.paused){{ audio.play(); }} 
-            document.body.removeEventListener('click', playMusic); 
-            }}); 
+        <script>
+        (function() {{
+            var audio = document.getElementById('bgmusic');
+            var playPromise = audio.play();
+            if(playPromise !== undefined) {{
+                playPromise.then(function() {{
+                }}).catch(function(error) {{
+                    document.body.addEventListener('click', function playMusic() {{
+                        audio.play().catch(function(e) {{}});
+                        document.body.removeEventListener('click', playMusic);
+                    }}, {{once: true}});
+                }});
+            }}
+        }})();
         </script>
 
         <p onclick="document.getElementById('bgmusic').play()"
